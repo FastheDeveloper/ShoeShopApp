@@ -1,9 +1,10 @@
 import { View,StyleSheet, Text, Image, FlatList,Pressable, useWindowDimensions,ScrollView } from "react-native";
 import React from "react";
-import products from "../data/products";
+// import products from "../data/products";
+import {useSelector} from 'react-redux'
 
 const ProductDetails = () => {
-  const product = products[1];
+  const product = useSelector((state)=>state.products.selectedProduct)
   const { width } = useWindowDimensions();
   const addToCart  =()=>{
     console.log('Add to cart');
@@ -18,7 +19,7 @@ const ProductDetails = () => {
         renderItem={({item}) => (
           <Image
             source={{ uri: item}}
-            style={{ width: width, aspectRatio: 1 }}
+            style={{ width, aspectRatio: 1 }}
           />
         )}
         horizontal
