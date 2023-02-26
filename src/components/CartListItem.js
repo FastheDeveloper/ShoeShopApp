@@ -36,6 +36,7 @@ const CartListItem = ({ cartItem }) => {
 
 const styles = StyleSheet.create({
   container: {
+    // marginTop:20,
     padding: 10,
     paddingHorizontal: 20,
     flexDirection: "row",
