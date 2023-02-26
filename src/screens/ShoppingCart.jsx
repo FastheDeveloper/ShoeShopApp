@@ -16,7 +16,7 @@ const ShoppingTotal =() => (
 
       <View style={styles.row}>
         <Text style={styles.textBold}>Total</Text>
-        <Text style={styles.textBold}>$10,100</Text>
+        <Text style={styles.textBold}>$20,100</Text>
       </View>
     </View>
   )
