@@ -13,7 +13,7 @@ const Navigation = () => {
   const numberOfItems=useSelector(selectNumberOfItems);
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{contentStyle:{backgroundColor:'white'}}}>
+      <Stack.Navigator screenOptions={{contentStyle:{backgroundColor:'white'},headerTitleAlign:'center'}}>
         <Stack.Screen
           name="Home"
           component={ProductScreen}

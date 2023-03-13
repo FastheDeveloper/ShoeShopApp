@@ -1,21 +1,59 @@
-import { View,StyleSheet, Text, Image, FlatList,Pressable, useWindowDimensions,ScrollView } from "react-native";
-import React from "react";
+import { View,StyleSheet, Text, Image, FlatList,TouchableOpacity,Pressable, useWindowDimensions,ScrollView,Alert, Modal, ActivityIndicator } from "react-native";
+import React, { useState } from "react";
 // import products from "../data/products";
 import {useSelector,useDispatch} from 'react-redux'
 import { cartStore } from "../Redux Store/cartStore.";
+import{useGetProductQuery}from '../Redux Store/apiStore'
 
-const ProductDetails = () => {
-  const product = useSelector((state)=>state.products.selectedProduct)
+const ProductDetails = ({route}) => {
+  const id=route.params.id;
+  const {data,isLoading,error}=useGetProductQuery(id);
+  // const product = useSelector((state)=>state.products.selectedProduct)
   const dispatch=useDispatch();
   const { width } = useWindowDimensions();
+  const [mod,setMod]=useState(false);
+
 
   const addToCart  =()=>{
     dispatch(cartStore.actions.addCartItem({product:product}))
+    // navigation.navigate('Cart')
+    Alert.alert('Added to cart')
+  setMod(true)
+
   }
+
+ 
   
+
+if(isLoading){
+  return <ActivityIndicator />
+}
+if (error){
+  return <Text>Rooe fetchinf</Text>
+}
+const product=data.data
   return (
     <View>
       <ScrollView >
+    {/* <Modal visible={mod} style={{flex:1,}}>
+      <View style={{justifyContent:'center',alignItems:'center',flex:1}}>
+      <View style={{borderWidth:3,width:'65%',aspectRatio:1}}>
+        <View style={{justifyContent:'center',flexDirection:'row',alignItems:'center',marginTop:90}}>
+        <Text style={{fontSize:25,textAlign:'center'}}> Item added succesfully</Text>
+        </View>
+      <View style={{marginHorizontal:15,marginTop:40,flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+        <TouchableOpacity style={{backgroundColor:'#fff3',padding:5,borderRadius:15}} onPress={()=>setMod(false)}>
+          <Text>Okay</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{backgroundColor:'#fff3',padding:5,borderRadius:15}} onPress={()=>navigation.navigate('Cart')}>
+          <Text>Open addCartItem</Text>
+        </TouchableOpacity>
+      </View>
+      </View>
+      </View>
+    </Modal> */}
+
       {/* Image Carousel */}
       <FlatList
         data={product.images}

@@ -12,7 +12,7 @@ export const cartStore = createSlice({
   reducers: {
     addCartItem: (state, action) => {
       const newProduct = action.payload.product;
-      const cartItem = state.items.find((p) => p.product.id === newProduct.id);
+      const cartItem = state.items.find((p) => p.product._id === newProduct._id);
       if (cartItem) {
         cartItem.quantity += 1;
       } else {
@@ -23,7 +23,7 @@ export const cartStore = createSlice({
       const { productId, amount } = action.payload;
 
       const cartItem = state.items.find(
-        (item) => item.product.id === productId
+        (item) => item.product._id === productId
       );
       if (cartItem) {
         cartItem.quantity += amount;
@@ -32,6 +32,9 @@ export const cartStore = createSlice({
         state.items = state.items.filter((item) => item !== cartItem);
       }
     },
+    clear:(state)=>{
+      state.items=[]
+    }
   },
 });
 

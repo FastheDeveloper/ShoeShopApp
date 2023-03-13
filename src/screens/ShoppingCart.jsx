@@ -1,10 +1,10 @@
-import { View, Text, FlatList, StyleSheet,Pressable } from "react-native";
+import { View, Text, FlatList, StyleSheet,Pressable, TouchableOpacity, ActivityIndicator,Alert } from "react-native";
 import React from "react";
 import CartListItem from "../components/CartListItem";
 import cart from "../data/cart";
-import { useSelector } from "react-redux";
-import { selectDeliveryPrice, selectSubtotal,selectTotal } from "../Redux Store/cartStore.";
-
+import { useDispatch, useSelector } from "react-redux";
+import { selectDeliveryPrice, selectSubtotal,selectTotal,cartStore }from "../Redux Store/cartStore.";
+import {useCreateOrderMutation}from '../Redux Store/apiStore'
 const ShoppingTotal =() => {
   const subTotal=useSelector(selectSubtotal);
   const delivery=useSelector(selectDeliveryPrice)
@@ -30,17 +30,62 @@ return(
   )
 }
 
-const ShoppingCart = () => {
+const ShoppingCart = ({navigation}) => {
   const cartItems=useSelector((state)=>state.cart.items)
+  const [createOrder,{data,error,isLoading}]=useCreateOrderMutation();
+  const subTotal=useSelector(selectSubtotal);
+  const delivery=useSelector(selectDeliveryPrice)
+  const total=useSelector(selectTotal)
+  const dispatch=useDispatch()
+
+  console.log(error,isLoading)
+ 
+ const onCreatetOrder=async ()=>{
+  const result = await createOrder({
+    items:cartItems,
+    subTotal,
+    delivery,
+    total,
+    customer:{
+      name:'Farouq',
+      address:'Lagos',
+      email:'seriki1farou@gmail.com'
+    }
+  })
+  if(result.data?.status==='OK'){
+    Alert.alert(
+      'Order has been submitted',
+      `your order reference is: ${result.data.data.ref}`
+    );
+      dispatch(cartStore.actions.clear())
+  }
+ }
+  if (cartItems.length === 0) {
+    return (
+      <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+        <TouchableOpacity onPress={()=>navigation.navigate('Home')}>
+        <Text style={{fontSize:25,fontWeight:'600'}}>
+           Click to Start Shopping
+          </Text>
+          </TouchableOpacity>
+      </View>
+    )
+  }
+
   return (
     <>
+    
       <FlatList
         data={cartItems}
         renderItem={({ item }) => <CartListItem cartItem={item} />}
         ListFooterComponent={ShoppingTotal}
       />
-      <Pressable style={styles.button} >
-        <Text style={styles.buttonText}>Checkout</Text>
+      <Pressable onPress={onCreatetOrder} style={styles.button} >
+        <Text style={styles.buttonText}>
+          
+          Checkout
+          {isLoading&&<ActivityIndicator/>}
+          </Text>
       </Pressable>
     </>
   );
