@@ -7,6 +7,8 @@ import ShoppingCart from "./screens/ShoppingCart";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { selectNumberOfItems } from "./Redux Store/cartStore.";
+import TrackOrder from "./screens/TrackOrder";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
@@ -24,7 +26,14 @@ const Navigation = () => {
                 <Text style={{marginLeft:5,fontWeight:'900'}}>{numberOfItems}</Text>
               </Pressable>
             ),
-           
+            headerLeft: () => (
+              <MaterialCommunityIcons
+              onPress={() => navigation.navigate('Track Orders')}
+              name="truck-delivery"
+              size={22}
+              color="gray"
+            />
+            ),
           })}
           
         />
@@ -34,6 +43,7 @@ const Navigation = () => {
           options={{ presentation: "modal" }}
         />
         <Stack.Screen name="Cart" component={ShoppingCart} />
+        <Stack.Screen name="Track Orders" component={TrackOrder} />
       </Stack.Navigator>
     </NavigationContainer>
   );

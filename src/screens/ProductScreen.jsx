@@ -20,7 +20,7 @@ const ProductScreen = ({navigation}) => {
   return <Text>etching</Text>;
  }
  if(error){
-  console.log(error)
+  // console.log(error)
   return  <Text>Error fetching</Text>
  }
 const products=data.data

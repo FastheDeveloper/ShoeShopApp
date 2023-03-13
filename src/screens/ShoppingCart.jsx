@@ -38,7 +38,7 @@ const ShoppingCart = ({navigation}) => {
   const total=useSelector(selectTotal)
   const dispatch=useDispatch()
 
-  console.log(error,isLoading)
+  // console.log(error,isLoading)
  
  const onCreatetOrder=async ()=>{
   const result = await createOrder({
