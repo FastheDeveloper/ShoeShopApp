@@ -4,7 +4,9 @@ import CartListItem from "../components/CartListItem";
 import cart from "../data/cart";
 import { useDispatch, useSelector } from "react-redux";
 import { selectDeliveryPrice, selectSubtotal,selectTotal,cartStore }from "../Redux Store/cartStore.";
-import {useCreateOrderMutation}from '../Redux Store/apiStore'
+import {useCreateOrderMutation,useCreatePaymentIntentMutation}from '../Redux Store/apiStore'
+import { useStripe } from "@stripe/stripe-react-native";
+
 const ShoppingTotal =() => {
   const subTotal=useSelector(selectSubtotal);
   const delivery=useSelector(selectDeliveryPrice)
@@ -33,6 +35,8 @@ return(
 const ShoppingCart = ({navigation}) => {
   const cartItems=useSelector((state)=>state.cart.items)
   const [createOrder,{data,error,isLoading}]=useCreateOrderMutation();
+  const [createPaymentIntent]=useCreatePaymentIntentMutation();
+  const {initPaymentSheet,presentPaymentSheet}=useStripe();
   const subTotal=useSelector(selectSubtotal);
   const delivery=useSelector(selectDeliveryPrice)
   const total=useSelector(selectTotal)
@@ -40,7 +44,38 @@ const ShoppingCart = ({navigation}) => {
 
   // console.log(error,isLoading)
  
- const onCreatetOrder=async ()=>{
+  const onCheckout = async () => {
+    // 1. Create a payment intent
+   const response=await createPaymentIntent({amount:Math.floor(total*100)})
+   if(response.error){
+    Alert.alert('Something went wrong, try again');
+    return;
+   }
+    // 2. Initialize the Payment sheet
+    const initResponse=await initPaymentSheet({
+      merchantDisplayName:'FastheCreator',
+      paymentIntentClientSecret:response.data.paymentIntent,
+      // defaultBillingDetails:{ name:'',address:''}
+
+    })
+    if(initResponse.error){
+      console.log(initResponse.error)
+      Alert.alert('Something went wrong, try again');
+      return;
+    }
+    
+    // 3. Present the Payment Sheet from Stripe
+    const paymentResponse=await presentPaymentSheet();
+    if(paymentResponse.error){
+      Alert.alert(`Error code: ${paymentResponse.error.code}`, paymentResponse.error.message);
+      return;
+    }
+    
+    // 4. If payment ok -> create the order
+    onCreateOrder();
+  };
+
+ const onCreateOrder=async ()=>{
   const result = await createOrder({
     items:cartItems,
     subTotal,
@@ -80,13 +115,13 @@ const ShoppingCart = ({navigation}) => {
         renderItem={({ item }) => <CartListItem cartItem={item} />}
         ListFooterComponent={ShoppingTotal}
       />
-      <Pressable onPress={onCreatetOrder} style={styles.button} >
+      <TouchableOpacity onPress={onCheckout} style={styles.button} >
         <Text style={styles.buttonText}>
           
           Checkout
           {isLoading&&<ActivityIndicator/>}
           </Text>
-      </Pressable>
+      </TouchableOpacity>
     </>
   );
 };
