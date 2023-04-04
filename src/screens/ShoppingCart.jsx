@@ -16,17 +16,17 @@ return(
     <View style={styles.totalContainer}>
       <View style={styles.row}>
         <Text style={styles.text}>Subtotal</Text>
-        <Text style={styles.text}>${subTotal}</Text>
+        <Text style={styles.text}>N{subTotal}</Text>
       </View>
 
       <View style={styles.row}>
         <Text style={styles.text}>Delivery</Text>
-        <Text style={styles.text}>${delivery}</Text>
+        <Text style={styles.text}>N{delivery}</Text>
       </View>
 
       <View style={styles.row}>
         <Text style={styles.textBold}>Total</Text>
-        <Text style={styles.textBold}>${total}</Text>
+        <Text style={styles.textBold}>N{total}</Text>
       </View>
     </View>
   )
