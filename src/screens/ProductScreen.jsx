@@ -34,9 +34,15 @@ const products=data.data
           // dispatch(productStore.actions.setSelectedProduct(item.id))
           navigation.navigate('Product Details',{id:item._id})}} style={styles.itemContainer}>
             <Image source={{uri:item.image }} style={styles.image}/>
+            <Text style={{marginHorizontal:10,fontWeight:'bold'}}>{item.name}</Text>
+            <View style={{flexDirection:'row',justifyContent:'space-between',marginHorizontal:10}}>
+              <Text>Price: N{item.price}</Text>
+              <Text>@{item.restaurant}</Text>
+            </View>
         </Pressable>
       )}
       numColumns={2}
+      ListHeaderComponent={<Text style={{textAlign:'center',fontSize:18,marginVertical:12}}>Available Demo Items</Text>}
       />
   
   )

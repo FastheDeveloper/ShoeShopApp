@@ -3,9 +3,12 @@ import React, { useState } from "react";
 // import products from "../data/products";
 import {useSelector,useDispatch} from 'react-redux'
 import { cartStore } from "../Redux Store/cartStore.";
+import { Entypo } from '@expo/vector-icons';
 import{useGetProductQuery}from '../Redux Store/apiStore'
+import { useNavigation } from "@react-navigation/native";
 
 const ProductDetails = ({route}) => {
+  const navigation=useNavigation();
   const id=route.params.id;
   const {data,isLoading,error}=useGetProductQuery(id);
   // const product = useSelector((state)=>state.products.selectedProduct)
@@ -17,8 +20,8 @@ const ProductDetails = ({route}) => {
   const addToCart  =()=>{
     dispatch(cartStore.actions.addCartItem({product:product}))
     // navigation.navigate('Cart')
-    Alert.alert('Added to cart')
-  setMod(true)
+    Alert.alert('Successful','Item added to cart')
+    navigation.navigate('Home')
 
   }
 
@@ -72,7 +75,18 @@ const product=data.data
         <Text style={styles.title}>{product.name}</Text>
 
         {/* price */}
-        <Text style={styles.price}>${product.price}</Text>
+        <View style={{flexDirection:'row',alignItems:'center',justifyContent:"space-between"}}>
+        <Text style={styles.price}>N{product.price}</Text>
+        <View style={{flexDirection:'row',alignItems:'center'}}>
+        <Entypo name="star" size={24} color="gold" />
+        <Entypo name="star" size={24} color="gold" />
+        <Entypo name="star" size={24} color="gold" />
+        <Entypo name="star" size={24} color="gold" />
+        <Entypo name="star-outlined" size={24} color="gold" />
+       
+        </View>
+        </View>
+       
 
         {/* description */}
         <Text style={styles.description}>{product.description}</Text>
