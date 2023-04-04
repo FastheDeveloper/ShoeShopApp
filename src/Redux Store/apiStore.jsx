@@ -1,6 +1,6 @@
 import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
-const baseUrl='http://192.168.43.1:1900/'
+const baseUrl='https://lime-wild-lovebird.cyclic.app/'
 
 export const apiSlice=createApi({
     reducerPath:'api',
